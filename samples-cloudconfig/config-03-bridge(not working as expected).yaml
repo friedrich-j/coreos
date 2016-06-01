@@ -1,0 +1,80 @@
+#cloud-config
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAynHnpiFoudQXQMDJ8G7MxD/dHcJltopYCgyJmbowHJaG0a1RqusCSemFvWXztEPzp5IxUqnDgNMAwrgGey7YnDPnPSwpPzKqc6dIRecDRMtFZDgQkAbKKkjZKabqAd7uQGKKqo1QPQjvPf7JKpjIcmnn00pH8hW/lrU79FyaiisqaAXvjtPnMT+AyCHYIic0gYqyl5+D4pSnyh0jsIOf0BTGikaubcLVSYp1dn6XA8HMVhoYL7vLwGD+4bPxz6A16mBKLw6km0EYAUrZEetYqZ1av67oJ6oj8M/+0POfn6L5Zx6tkRnfwkZ8yn+E0ckdoRLQdPRMiUr27KZOiid1Vw== john.doe@nowhere.com
+
+
+##
+## creating bridge
+##
+
+write_files:
+  - path: /home/core/.bashrc
+    content: |
+      . /usr/share/skel/.bashrc
+      alias ll="ls -l"
+      
+#  - path: /etc/systemd/network/bridge0.link
+#    permissions: 0644
+#    owner: root
+#    content: |
+#      [Match]
+#      Name=br0
+#      
+#      [Link]
+#      Name=wireless0
+#      MTUBytes=1450
+#      BitsPerSecond=10M
+#      WakeOnLan=magic
+#      MACAddressPolicy=persistent
+      
+  - path: /etc/systemd/network/20-bridge0.netdev
+    permissions: 0644
+    owner: root
+    content: |
+      [NetDev]
+      Name=br0
+      Kind=bridge
+      
+  - path: /etc/systemd/network/21-bridge0-bind.network
+    permissions: 0644
+    owner: root
+    content: |
+      [Match]
+      Name=en*
+
+      [Network]
+      Bridge=br0
+      
+  - path: /etc/systemd/network/22-bridge0-settings.network
+    permissions: 0644
+    owner: root
+    content: |
+      [Match]
+      Name=br0
+
+      [Network]
+      DHCP=ipv4
+      # DNS=192.168.1.1
+      # Address=192.168.1.33/24
+      # Gateway=192.168.1.1
+
+      # [DHCP]
+      # RouteMetric=20
+
+  - path: /etc/systemd/network/23-bridge0-whitelist.network
+    permissions: 0644
+    owner: root
+    content: |
+      [Match]
+      Name=br0
+
+      [Network]
+
+# sudo ip link set br0 down
+# sudo brctl delbr br0
+      
+coreos:
+  units:
+    - name: systemd-networkd.service
+      command: restart
+      
