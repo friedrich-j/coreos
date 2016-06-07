@@ -1,0 +1,7 @@
+version: '2'
+services:
+  tools:
+    build: .
+    image: friedrich-j/dockertools
+    volumes:
+    - ./tmp:/data:rw

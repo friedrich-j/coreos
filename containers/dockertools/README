@@ -1,4 +1,19 @@
-invoke:
+Purpose:
+	This container encapsulates a helper script for creating either a config drive ISO image or a VMware guest info string (in BASE64 and gzip).
+	This ISO / string contains the information for the auto-configuration of a CoreOS system used by the cloud-init component.
+	
+Prerequisites:
+	docker-compose installed on host system
 
-./run.sh -h
+Usage:
+	Build:
+		docker-compose build
+
+	Run samples:
+		docker-compose run tools -h
+		docker-compose run --rm tools -i key -d -o iso
+		
+	Clean after run:
+		rm -r tmp
+		
 

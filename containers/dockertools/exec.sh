@@ -39,6 +39,33 @@ write_files:
     content: |
       . /usr/share/skel/.bashrc
       alias ll="ls -l"
+      
+  - path: /opt/bin/install/install.sh
+    permissions: 0755
+    owner: root
+    content: |
+      #!/bin/sh
+      if [[ ! -f /opt/bin/docker-compose ]]
+      then
+        curl -L \`curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r '.assets[].browser_download_url | select(contains("Linux") and contains("x86_64"))'\` > /opt/bin/docker-compose
+        chmod +x /opt/bin/docker-compose
+      fi
+      
+coreos:
+  units:
+    - name: systemd-networkd.service
+      command: restart
+
+
+    - name: runcmd.service
+      command: start
+      content: |
+        [Unit]
+        Description=install
+
+        [Service]
+        Type=oneshot
+        ExecStart=/bin/sh -c "/opt/bin/install/install.sh > /var/log/install.log 2>&1;"
 EOF
 }
 
