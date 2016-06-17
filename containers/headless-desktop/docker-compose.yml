@@ -1,0 +1,7 @@
+version: '2'
+services:
+  desktop:
+    build: .
+    image: friedrich-j/headless-desktop
+    volumes:
+    - /var/run/xpra:/var/run/xpra:rw
