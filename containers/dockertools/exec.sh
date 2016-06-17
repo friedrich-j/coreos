@@ -110,6 +110,10 @@ while getopts "di:o:h" opt; do
 	      create_with_ssh_keys
 	      ;;
 	      
+      	stdin)
+	      create_from_stdin
+	      ;;
+
 	    *)
           echo "ERROR: unknown input source '$OPTARG'!" >&2
           exit 1

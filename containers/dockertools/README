@@ -12,6 +12,7 @@ Usage:
 	Run samples:
 		docker-compose run tools -h
 		docker-compose run --rm tools -i key -d -o iso
+        cat ~/config/*.yaml | docker-compose run tools -i stdin -o compressed
 		
 	Clean after run:
 		rm -r tmp
