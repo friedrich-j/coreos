@@ -1,0 +1,12 @@
+version: '2'
+services:
+  desktop:
+    build: .
+    image: friedrich-j/remote-desktop
+    ports:
+    - "2222:22" 
+    volumes:
+    - $HOME/.ssh/authorized_keys:/home/desktop/.ssh/authorized_keys:ro
+    - /var/run/xpra:/var/run/xpra:rw
+#    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+#    - /tmp/.xpra:/home/desktop/.xpra:rw
