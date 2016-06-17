@@ -1,0 +1,42 @@
+#cloud-config
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAynHnpiFoudQXQMDJ8G7MxD/dHcJltopYCgyJmbowHJaG0a1RqusCSemFvWXztEPzp5IxUqnDgNMAwrgGey7YnDPnPSwpPzKqc6dIRecDRMtFZDgQkAbKKkjZKabqAd7uQGKKqo1QPQjvPf7JKpjIcmnn00pH8hW/lrU79FyaiisqaAXvjtPnMT+AyCHYIic0gYqyl5+D4pSnyh0jsIOf0BTGikaubcLVSYp1dn6XA8HMVhoYL7vLwGD+4bPxz6A16mBKLw6km0EYAUrZEetYqZ1av67oJ6oj8M/+0POfn6L5Zx6tkRnfwkZ8yn+E0ckdoRLQdPRMiUr27KZOiid1Vw== john.doe@nowhere.com
+
+##
+## executing a shell command during startup
+##
+
+write_files:
+  - path: /var/lib/iptables/rules-save
+    permissions: 0644
+    owner: root:root
+    content: |
+      *filter
+      :INPUT DROP [0:0]
+      :FORWARD DROP [0:0]
+      :OUTPUT ACCEPT [0:0]
+      -A INPUT -i lo -j ACCEPT
+      -A INPUT -i eth1 -j ACCEPT
+      -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+      -A INPUT -p icmp -m icmp --icmp-type 0 -j ACCEPT
+      -A INPUT -p icmp -m icmp --icmp-type 3 -j ACCEPT
+      -A INPUT -p icmp -m icmp --icmp-type 11 -j ACCEPT
+      COMMIT
+
+coreos:
+  units:
+    - name: iptables-restore.service
+      enable: true
+
+    - name: runcmd.service
+      command: start
+      content: |
+        [Unit]
+        Description=echo
+
+        [Service]
+        Type=oneshot
+        ExecStart=/sbin/iptables-restore /var/lib/iptables/rules-save
