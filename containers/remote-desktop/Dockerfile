@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y openssh-server sudo && \
 	echo "desktop    ALL = NOPASSWD: ALL" > /etc/sudoers.d/desktop && \
 	sudo -u desktop mkdir ~desktop/.ssh
 COPY conf_keyboard.txt /etc/default/keyboard
-RUN apt-get update && apt-get install -y xdm openbox x11-apps xpra dbus dbus-x11 x11vnc && \
+RUN apt-get update && apt-get install -y xdm x11-apps xpra dbus dbus-x11 x11vnc && \
     apt-get --reinstall install xfonts-base
 RUN mkdir /var/run/dbus && \
 	mkdir /var/run/xpra && \
@@ -32,14 +32,16 @@ RUN apt-get update && apt-get install -y websockify unzip net-tools && \
 RUN apt-get update && apt-get install -y socat && \
 	echo "export CONTAINER_LABEL=remote_desktop" >> /etc/profile
 	
-RUN apt-get install -y obconf xmlstarlet gcolor2
-
-RUN sudo -u desktop mkdir -p ~desktop/.config/openbox && \
+RUN apt-get update && apt-get install -y openbox obconf obmenu xfce4-panel xdotool xmlstarlet gcolor2 && \
+    sudo -u desktop mkdir -p ~desktop/.config/openbox && \
     cat /etc/xdg/openbox/menu.xml | xmlstarlet ed -N 'ob=http://openbox.org/' -d '/ob:openbox_menu/ob:menu/ob:item[@label="Web browser"]' | xmlstarlet ed -N 'ob=http://openbox.org/' -d '/ob:openbox_menu/ob:menu/ob:item[@label="Exit"]' | xmlstarlet ed -N 'ob=http://openbox.org/' -d '/ob:openbox_menu/ob:menu/ob:separator[position()=last()]' | xmlstarlet ed -N 'ob=http://openbox.org/' -d '/ob:openbox_menu/ob:menu/ob:menu[@id="/Debian"]' | sudo -u desktop tee ~desktop/.config/openbox/menu.xml > /dev/null && \
     sudo -u desktop cp /etc/xdg/openbox/rc.xml ~desktop/.config/openbox/rc.xml
+	
+RUN echo "export PATH=$PATH:/usr/scripts" >> ~desktop/.profile
 		 
 EXPOSE 22
-COPY scripts/*.sh /scripts/
+COPY scripts/*.sh /usr/scripts/
+RUN chmod -R +x /usr/scripts
 COPY xorg.conf /home/desktop/.vnc
-RUN chmod -R +x /scripts
-ENTRYPOINT [ "/scripts/exec.sh" ]
+RUN chmod -R +x /usr/scripts
+ENTRYPOINT [ "/usr/scripts/exec.sh" ]
