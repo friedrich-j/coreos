@@ -21,8 +21,3 @@ then
 else
 	. ~/display.env
 fi
-if [[ ! -z "$1" ]]
-then
-	echo "invoking command '$1' ..."
-	nohup $1 &
-fi
