@@ -11,7 +11,6 @@ then
 	echo "ERROR: could not obtain lock !"
 	exit 1
 fi
-dbus-daemon --system --fork
 rm /tmp/.X1-lock /tmp/.X11-unix/X1
 sudo -i -u desktop /usr/scripts/start_services.sh
 /usr/sbin/sshd -D

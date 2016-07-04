@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y sudo && \
 	adduser --disabled-password --shell /bin/bash --gecos '' desktop && \
 	echo "desktop    ALL = NOPASSWD: ALL" > /etc/sudoers.d/desktop
 COPY conf_keyboard.txt /etc/default/keyboard
-RUN apt-get update && apt-get install -y xorg openbox x11-apps xpra dbus dbus-x11 && \
+RUN apt-get update && apt-get install -y x11-apps xpra dbus dbus-x11 && \
 	mkdir /var/run/dbus && \
 	echo "export XPRA_SOCKET_HOSTNAME=display" >> /etc/profile && \
 	mkdir /var/run/xpra && \
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y xorg openbox x11-apps xpra dbus dbus-x1
         | tee /etc/xpra/xpra.conf > /dev/null
 
 RUN echo "export CONTAINER_LABEL=headless_desktop" >> /etc/profile && \
-	echo "xclock" > /etc/container_startup
+	echo "export PATH=$PATH:/usr/scripts" >> ~desktop/.profile
 
 COPY scripts/*.sh /usr/scripts/
 RUN chmod -R +x /usr/scripts
