@@ -11,6 +11,9 @@ then
 	exit 1
 fi
 
+echo "please wait ..."
+echo
+
 declare -A images containers container_sizes container_cmds
 
 a=`docker images --no-trunc --format '{{.ID}};{{.Repository}};{{.Tag}}' | awk -F';' '{ if($2=="<none>") { a = $1 } else { a = $2 ":" $3 }; print "images[" $1 "]=\"" a "\"" }'`
