@@ -1,0 +1,7 @@
+version: '2'
+services:
+  elk:
+    build: .
+    image: friedrich-j/elk
+    ports: 
+      - "5601:5601"
