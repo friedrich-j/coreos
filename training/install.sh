@@ -5,4 +5,4 @@ wget -O training.ignition https://raw.githubusercontent.com/friedrich-j/coreos/m
 echo "Enter the password for user 'core'."
 hash=`openssl passwd -1 < $(tty)` || exit 1
 awk -v h="$hash" '{ gsub("\\{PASSWORD\\}", h); print }' training.ignition > training2.ignition || exit 1
-coreos-install -d /dev/sda -i training2.ignition -o vmware_raw
+sudo coreos-install -d /dev/sda -i training2.ignition -o vmware_raw
