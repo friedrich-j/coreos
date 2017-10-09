@@ -1,7 +1,7 @@
 Use either
 
-curl --noproxy '*' https://raw.githubusercontent.com/friedrich-j/coreos/master/training/install.sh | /bin/sh
+export TTY=$(tty); curl -L https://raw.githubusercontent.com/friedrich-j/coreos/master/training/install.sh | /bin/sh
 
 or
 
-curl https://goo.gl/gqxjQM | /bin/sh
+export TTY=$(tty); curl -L https://goo.gl/gqxjQM | /bin/sh
