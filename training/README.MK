@@ -4,4 +4,4 @@ curl --noproxy '*' https://raw.githubusercontent.com/friedrich-j/coreos/master/t
 
 or
 
-curl xyz
+curl https://goo.gl/gqxjQM | /bin/sh
