@@ -1,0 +1,78 @@
+passwd:
+  users:
+  - name: core
+      # openssl passwd -1
+    password_hash: "{PASSWORD}"
+
+storage:
+  files:
+  - path: /etc/hostname
+    filesystem: root
+    contents:
+      inline: "CoreOS-Training"
+    mode: 0420
+
+  - path: /home/core/.bashrc
+    filesystem: root
+    contents:
+      inline: |
+        . /usr/share/skel/.bashrc
+        alias ll="ls -l"
+    mode: 0644
+    user:
+      id: 500
+    group:
+      id: 501
+
+  - path: /opt/bin/install_docker-compose.sh
+    filesystem: root
+    contents:
+      inline: |
+        #!/bin/sh
+        until ping -c1 api.github.com; do sleep 2; done
+        curl -L `curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r '.assets[].browser_download_url | select(contains("Linux") and contains("x86_64"))'` > /opt/bin/docker-compose
+        chmod +x /opt/bin/docker-compose
+    mode: 0700
+    user:
+      id: 500
+    group:
+      id: 501
+     
+  - path: /etc/systemd/network/20-dhcp.network
+    filesystem: root
+    contents:
+      inline: |
+        [Match]
+        Name=en*
+
+        [Network]
+        DHCP=yes
+
+        [DHCP]
+        UseMTU=true
+        UseDomains=true
+        ClientIdentifier=mac   
+    mode: 0644
+    user:
+      id: 500
+    group:
+      id: 501
+ 
+systemd:
+  units:
+  - name: install_docker-compose.service
+    enable: true
+    contents: |
+        [Unit]
+        ConditionFirstBoot=yes
+        Description=Install docker-compose
+        Requires=network-online.target
+        After=network-online.target
+    
+        [Service]
+        Type=oneshot
+        RemainAfterExit=true
+        ExecStart=/opt/bin/install_docker-compose.sh
+            
+        [Install]
+        WantedBy=multi-user.target
