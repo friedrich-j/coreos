@@ -2,9 +2,7 @@ passwd:
   users:
   - name: core
       # openssl passwd -1
-    password_hash: "$1$kRNIEg7.$WMmX8IDE0XGgqi8hzCxWJ1"
-    ssh_authorized_keys:
-    - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDJSbOpP3+8rtyoyaXjo+DQkSFpF4T7Q23zpTeCENVymPW7slPUTSOIvy2mmDJa0fwvI+SeDpnxL87/iiyZnLZLKRliVnCUs8iISp9aDrYigcyZc4AGA1c3BWm5DooH7oABvwtsrEPv5zpBTWwIybDA86PmV0hoMxgGsVMUdcxLkoVEkZqanjrcB1ntR2ILLH3U/s1+M6NdUWqyF0ga0WGLlcs/wMi4BgNqcGLOx+hGjtUu45Bq3Tr0waM1n4MCsf4HPntsgzBiFDfWzNmcR0gV4vIVb0graWoCoh695jjrRwJXsBNMU0Kjj6b8h+Y/vU19walDMnmDInpRgRSbBBxZzKvyTCKUvwq2LWKhfaGHa9lskJgD9umZTS7TuppRlSlxtcKX47XnVQ+BEC2mD9LGNEhljJbOTsThemL89bTcNxCS6EMtF7UqaZLvHUXW0g2jxIEh9ovOSce/syEFw7lEmVD8NpJmR/jkAAbSYb6uZdj/xX85Uifh0JlqNiU+DgKhjpKN8M+C4gHDEqiS7km2SFDrmhz58VLkmwJXGT9RNyq8b7D48YUmvZDpMxiO3O1Ewg4HjetuvhYlHmgcpE5WvDn9WKC8onEjPosaNT5yQiOeuX0Nh0PlgcdLLb/KtBK3Hzx9BRmrCDMK00/tJkFVQm2IrZ/aEW+Te1xVeNDxnQ== joerg@matrix"
+    password_hash: "{PASSWORD}"
 
 storage:
   files:
