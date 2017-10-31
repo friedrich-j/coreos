@@ -1,4 +1,5 @@
 #!/bin/sh
+TTY=`ps -o tty= -p $$`
 rm training.ignition coreos-install
 wget -O coreos-install https://raw.github.com/coreos/init/master/bin/coreos-install || exit 1
 wget -O training.ignition https://raw.githubusercontent.com/friedrich-j/coreos/master/training/training.ignition || exit 1
