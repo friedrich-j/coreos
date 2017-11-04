@@ -15,7 +15,7 @@ RUN curl -Lskj https://download.elasticsearch.org/elasticsearch/release/org/elas
 
 ENV LOGSTASH_VERSION 2.3.4
 RUN apk add --no-cache bash libzmq && \
-	cd /usr/lib && ln -sf libzmq.so.5.0.0 libzmq.so && cd / && \
+	cd /usr/lib && ln -sf libzmq.so.5 libzmq.so && cd / && \
 	curl -Lskj http://download.elastic.co/logstash/logstash/logstash-$LOGSTASH_VERSION.tar.gz | tar xfz - && \
   	mv logstash-$LOGSTASH_VERSION /opt/logstash && \
   	rm -rf $(find /opt/logstash | egrep "(\.(exe|bat)$|sigar/.*(dll|winnt|x86-linux|solaris|ia64|freebsd|macosx))")
