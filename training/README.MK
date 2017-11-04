@@ -1,7 +1,7 @@
 Use either
 
-export TTY=$(tty); curl -L https://raw.githubusercontent.com/friedrich-j/coreos/master/training/install.sh | /bin/sh
+curl -L https://raw.githubusercontent.com/friedrich-j/coreos/master/training/install.sh | sh
 
 or
 
-export TTY=$(tty); curl -L https://goo.gl/gqxjQM | /bin/sh
+curl -L https://goo.gl/gqxjQM | sh
