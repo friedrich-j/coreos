@@ -1,5 +1,0 @@
-version: '2'
-services:
-  jre:
-    build: .
-    image: friedrich-j/core-jre:jre8
