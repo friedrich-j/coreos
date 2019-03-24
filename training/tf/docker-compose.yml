@@ -12,3 +12,7 @@ services:
     - $HOME/.aws:/home/user/.aws
     - ./tf-scripts:/home/user/terraform_scripts
     - ./tf-data:/home/user/terraform_data
+    entrypoint:
+    - /bin/sh
+    - -c
+    - cd /home/user/terraform_scripts;/bin/bash -l
