@@ -1,0 +1,85 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+required_plugins = %w(vagrant-ignition vagrant-disksize)
+
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
+
+#puts 'Hello!'
+
+$update_channel = "beta"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "coreos-#{$update_channel}"
+  config.vm.box_url = "https://#{$update_channel}.release.core-os.net/amd64-usr/current/coreos_production_vagrant_virtualbox.json"
+
+  config.disksize.size = '20GB'
+
+  config.ssh.insert_key = false
+  config.ssh.forward_agent = true  
+
+  config.vm.provider :virtualbox do |v|
+    v.check_guest_additions = false
+    v.functional_vboxsf     = false
+    config.ignition.enabled = true
+  end
+
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false # false
+    vb.name = 'k8s-training'
+    vb.memory = 2048
+    vb.cpus = 2
+#    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+    vb.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+    vb.customize ["modifyvm", :id, "--boot1", "dvd"]
+    vb.customize ["modifyvm", :id, "--boot2", "net"]
+    vb.customize ["modifyvm", :id, "--boot3", "disk"]
+    vb.customize ["modifyvm", :id, "--boot4", "none"]
+    vb.customize ["modifyvm", :id, "--vram", "128"]
+    vb.customize ["modifyvm", :id, "--paravirtprovider", "kvm"]
+
+    config.ignition.config_obj = vb
+    config.ignition.path = 'k8s-training.ign'
+  end
+
+
+  config.vm.provision "shell" do |s|
+    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/joerg@matrix.pub").first.strip
+    s.inline = <<-SHELL
+      echo #{ssh_pub_key} >> /home/core/.ssh/authorized_keys
+    SHELL
+  end
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+end
