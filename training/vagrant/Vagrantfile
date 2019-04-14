@@ -74,6 +74,7 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SHELL
 #      sed -i '/\( vagrant insecure public key\)|\( vagrant\)$/d' /home/core/.ssh/authorized_keys
       ssh-keygen -b 4096 -f /home/core/.ssh/id_rsa -P training -C 'training@k8s'
+      cat /home/core/.ssh/id_rsa.pub >> /home/core/.ssh/authorized_keys
       docker pull cubeearth/puttygen
       docker run -i cubeearth/puttygen training < /home/core/.ssh/id_rsa > /home/core/.ssh/id_rsa.ppk
     SHELL
