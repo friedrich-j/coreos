@@ -1,8 +1,9 @@
 # Introduction
-This vagrant files are to install a single-node training kubernetes cluster.
+This vagrant files are to install a single-node training kubernetes cluster. Only Oracle VirtualBox as hypervisor is tested/supported.
 
 # Instructions
 - Install vagrant
+- Install Oracle VirtualBox
 - Clone this repository into a directory and navigate into this directory
 - Perform following commands:
 ```
