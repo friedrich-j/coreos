@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 
-required_plugins = %w(vagrant-ignition vagrant-disksize)
+required_plugins = %w(vagrant-ignition vagrant-disksize vagrant-scp)
 
 plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
 if not plugins_to_install.empty?
@@ -24,14 +24,16 @@ Vagrant.configure("2") do |config|
 
   config.disksize.size = '20GB'
 
-  config.ssh.insert_key = false
-  config.ssh.forward_agent = true  
+  config.ssh.insert_key = true
+  config.ssh.forward_agent = false  # set to 'true' if no hostOnly NIC is attached  
 
   config.vm.provider :virtualbox do |v|
     v.check_guest_additions = false
     v.functional_vboxsf     = false
     config.ignition.enabled = true
   end
+
+  config.vm.network "private_network", type: "dhcp"
 
   config.vm.provider :virtualbox do |vb|
     vb.gui = false # false
@@ -55,31 +57,26 @@ Vagrant.configure("2") do |config|
   end
 
 
-  config.vm.provision "shell" do |s|
-    ssh_pub_key = File.readlines("#{Dir.home}/.ssh/joerg@matrix.pub").first.strip
-    s.inline = <<-SHELL
-      echo #{ssh_pub_key} >> /home/core/.ssh/authorized_keys
-    SHELL
+  SSH_KEY_PATH="#{Dir.home}/.ssh/joerg@matrix.pub"
+
+  if File.exist?(SSH_KEY_PATH)
+    config.vm.provision "shell" do |s|
+      ssh_pub_key = File.readlines(SSH_KEY_PATH).first.strip
+      s.inline = <<-SHELL
+        echo #{ssh_pub_key} >> /home/core/.ssh/authorized_keys
+      SHELL
+    end
   end
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+#  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [".git/"]
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine and only allow access
-  # via 127.0.0.1 to disable public access
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
-
+  config.vm.provision "shell" do |s|
+    s.inline = <<-SHELL
+#      sed -i '/\( vagrant insecure public key\)|\( vagrant\)$/d' /home/core/.ssh/authorized_keys
+      ssh-keygen -b 4096 -f /home/core/.ssh/id_rsa -P training -C 'training@k8s'
+      docker pull cubeearth/puttygen
+      docker run -i cubeearth/puttygen training < /home/core/.ssh/id_rsa > /home/core/.ssh/id_rsa.ppk
+    SHELL
+  end
+    
 end

@@ -1,0 +1,1 @@
+vagrant scp :/home/core/.ssh/id_rsa.ppk id_rsa.ppk
