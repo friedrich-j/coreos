@@ -7,7 +7,7 @@ rm vm-data/* 2>/dev/null && err=$?
 
 vagrant up
 
-rm config.ign.merged config.img config.vmdk k8s-training.ign.merged 2>/dev/null && err=$?
+rm config.ign.merged config.img k8s-training.ign.merged 2>/dev/null && err=$?
 
 ip=`vagrant ssh -c 'cat /home/core/.ssh/hostOnlyIp.txt'`
 
@@ -26,8 +26,9 @@ echo
 echo "============================================================================="
 echo "Popular commands:"
 echo
-echo "ssh -i vm-data/id_rsa core@$ip"
+echo "ssh -i vm-data/id_rsa -oStrictHostKeyChecking=accept-new core@$ip"
 echo
 echo "export KUBECONFIG=$PWD/vm-data/kube_config"
 echo "============================================================================="
 
+which osascript > /dev/null 2>&1 && osascript -e 'display notification "VM successfully provisioned!"'
