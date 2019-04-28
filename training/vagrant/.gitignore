@@ -3,3 +3,4 @@ config.img
 config.vmdk
 config.ign.merged
 k8s-training.ign.merged
+vm-data/

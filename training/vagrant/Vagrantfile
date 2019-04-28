@@ -77,6 +77,23 @@ Vagrant.configure("2") do |config|
       cat /home/core/.ssh/id_rsa.pub >> /home/core/.ssh/authorized_keys
       docker pull cubeearth/puttygen
       docker run -i cubeearth/puttygen training < /home/core/.ssh/id_rsa > /home/core/.ssh/id_rsa.ppk
+      
+      ip=`ifconfig | awk -v d=$(route | awk '$1=="default" { print $8 }') 'match($0, /^[^ :]+/) { n=substr($0, RSTART, RLENGTH) } match($0, / +inet [0-9.]+/) { ip=substr($0, RSTART, RLENGTH); gsub(/^ +inet +/, "", ip); if (!match(n, /cni|docker|flannel|lo/) && n != d) { if(i>0) { printf ",%s", ip } else { printf "%s", ip }; i=i+1 }  }'`
+      echo -n "$ip" > /home/core/.ssh/hostOnlyIp.txt
+      chown -R core:core /home/core/.ssh
+      
+      echo
+      echo "Use following hostOnly IP address to access the provisioned VM: $ip"
+      echo
+   
+      start_time="$(date -u +%s)"   
+      echo "waiting for provisioned Kubernetes ..."
+      while [[ ! -f /opt/bin/install/ready.txt ]]
+      do
+      	echo "... $(($(date -u +%s)-$start_time))s"
+      	sleep 15
+      done
+      echo
     SHELL
   end
     

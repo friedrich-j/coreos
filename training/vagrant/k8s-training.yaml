@@ -189,8 +189,10 @@ storage:
         export PATH=$PATH:/opt/bin
         
         /opt/bin/install/install_k8s.sh
+        
+        ips=`ifconfig | awk 'match($0, /^[^ :]+/) { n=substr($0, RSTART, RLENGTH) } match($0, / +inet [0-9.]+/) { ip=substr($0, RSTART, RLENGTH); gsub(/^ +inet +/, "", ip); if (!match(n, /cni|docker|flannel|lo/)) { if(i>0) { printf ",%s", ip } else { printf "%s", ip }; i=i+1 }  }'`
 
-        kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU 2>&1 | tee /opt/bin/install/k8s_join.txt
+        kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --apiserver-cert-extra-sans="$ips"  2>&1 | tee /opt/bin/install/k8s_join.txt
         broadcast "Initialization of kubernetes master finished."
 
         /opt/bin/install/set_k8s_config.sh
@@ -203,7 +205,10 @@ storage:
         # sudo -i -u core kubectl create -f  https://k8s.io/examples/controllers/nginx-deployment.yaml       
 
         broadcast "Installation of kubernetes master finished."
+
+        touch /opt/bin/install/ready.txt
         broadcast "Have fun!"
+        
     mode: 0700
     user:
       name: root
