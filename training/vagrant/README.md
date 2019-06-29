@@ -21,4 +21,4 @@ _Or_ use the shell script ```./create.sh``` to execute all necessary steps autom
 *Note:* The passphrase of the SSH key file is ```training```
 
 # Side Effects
-There might be a problem with either the ignition or the disk-size plugin. After halting the VM, a restart is not possible due to a corrupt config.vmdk disk. However, this disk only needed during the first startup. So simply remove this disk manually from the VM settings or use ```vagrant halt```, which automatically removes this disk.
+There might be a problem with either the ignition or the disk-size plugin. After halting the VM, a restart is not possible due to a corrupt config.vmdk disk. However, this disk is only needed during the first startup. So simply remove this disk manually from the VM settings or use ```vagrant halt```, which automatically removes this disk.
