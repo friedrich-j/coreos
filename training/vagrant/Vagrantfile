@@ -93,8 +93,28 @@ Vagrant.configure("2") do |config|
       	echo "... $(($(date -u +%s)-$start_time))s"
       	sleep 15
       done
+      echo "finished!"
       echo
     SHELL
   end
-    
+  
+  config.trigger.after :up do |trigger|
+  	 trigger.warn = "For the first VM shutdown, either use 'vagrant halt' or remove manually the config drive (second disk)!" if !File.exist?(".vagrant/first_halt")
+  end
+  
+  config.trigger.after :halt do |trigger|
+    trigger.ruby do |env,machine|
+      if !File.file?(".vagrant/first_halt")
+      	system("VBoxManage storageattach #{machine.id} --storagectl 'IDE Controller' --device 0 --port 1 --medium none")
+      	File.open(".vagrant/first_halt", "a") {} 
+      end
+    end
+  end
+  
+  config.trigger.after :destroy do |trigger|
+  	File.delete(".vagrant/first_halt") if File.exist?(".vagrant/first_halt")
+  end
+
 end
+
+

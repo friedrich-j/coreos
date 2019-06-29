@@ -14,6 +14,6 @@ vagrant scp :/home/core/.kube/config kube_config
 ```
 - Use the file id_rsa for SSH key authentication of Linux ssh commands.
 - Use the file id_rsa.ppk for using PuTTY. Add this file to PuTTY's Pageant.
-- Use the file kube_config for accessing your k8s cluster via kubectl. Execute ```KUBECONFIG=$HOME/kube_config``` for this.
+- Use the file kube_config for accessing your k8s cluster via kubectl. Execute ```KUBECONFIG=$HOME/kube_config``` for this and adjust the IP address inside the kube config as needed.
 
 *Note:* The passphrase of the SSH key file is ```training```
