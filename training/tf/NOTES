@@ -1,0 +1,17 @@
+
+az login
+az account list --output table
+az account set --subscription "<subscription name>"
+
+az account set --subscription "285a5ec5-6500-4b86-aaf1-b575a3a87ad2"
+
+export TF_CLI_ARGS="-state=/home/user/terraform_data/terraform_az_training.tfstate -var-file=/home/user/terraform_tmp/variables.auto.tfvars"
+cd az
+terraform import azurerm_resource_group.myterraformgroup /subscriptions/285a5ec5-6500-4b86-aaf1-b575a3a87ad2/resourcegroups/rg-fme-docker-workshop
+
+export rg="rg-fme-docker-workshop"
+az configure --defaults group="$rg"
+
+az configure --defaults group=
+
+az lock list 

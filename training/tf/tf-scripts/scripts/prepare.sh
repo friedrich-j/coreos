@@ -9,7 +9,8 @@ if [[ "$PROVIDER" == "aws" ]]
 then
 	region="eu-west-1"
 else
-	region="northeurope"
+#	region="northeurope"
+	region="westeurope"
 fi
 
 function create_pwds {

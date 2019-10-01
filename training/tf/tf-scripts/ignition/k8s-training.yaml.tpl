@@ -235,14 +235,31 @@ systemd:
   - name: locksmithd.service
     mask: true
           
+  - name: wait-waagent.service
+    enable: true
+    contents: |
+      [Unit]
+      Description=Wait for waagent
+      Requires=network-online.target waagent.service
+      After=network-online.target waagent.service
+      ConditionPathExists=/etc/systemd/system/waagent.service
+        
+      [Service]
+      Type=oneshot
+      RemainAfterExit=true
+      ExecStart=/bin/sh -c 'while ! journalctl -a | grep -e ".* python.* INFO Daemon Provisioning complete"; do sleep 5; done'
+            
+      [Install]
+      WantedBy=multi-user.target
+
   - name: internet-connected.service
     enable: true
     contents: |
       [Unit]
       Description=Creates an network environment file
       Documentation=https://github.com/Cube-Earth/container-tools-coreos-setup-iso
-      Requires=network-online.target
-      After=network-online.target
+      Requires=network-online.target wait-waagent.service
+      After=network-online.target wait-waagent.service
         
       [Service]
       Type=oneshot

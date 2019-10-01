@@ -4,13 +4,13 @@ provider "azurerm" {
 
 # Create a resource group if it doesn’t exist
 resource "azurerm_resource_group" "myterraformgroup" {
-    name     = "rg_${var.id}"
+    name     = "${var.rg}"    # "rg_${var.id}"
     location = "${var.region}"
 
-    tags {
-        environment = "Training"
-        scope = "${var.id}"
-    }
+#    tags {
+#        environment = "Training"
+#        scope = "${var.id}"
+#    }
 }
 
 # Create virtual network

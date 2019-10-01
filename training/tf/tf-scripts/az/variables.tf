@@ -3,6 +3,11 @@ variable "id" {
   default = "training"
 }
 
+variable "rg" {
+  type = "string"
+  default = "rg_training"
+}
+
 variable "node_count" {
   type = "string"
   description = "Node count"
@@ -10,7 +15,7 @@ variable "node_count" {
 }
 
 variable "region" {
-  default = "northeurope"    # "eastus"
+  default = "westeurope"    # "eastus"
 }
 
 variable "key_path" {
@@ -25,21 +30,27 @@ variable "node_pwds" {
 variable "regions" {
   type = "map"
   default = {
-  	"0" = "northeurope"
-  	"1" = "northeurope"
+  	"0" = "westeurope"
+  	"1" = "westeurope"
+#  	"2" = "westeurope"
+#  	"3" = "westeurope"
+#	"4" = "eastus"
+#	"5" = "eastus"
+#	"6" = "eastus2"
+#	"7" = "eastus2"
+#	"8" = "westus"
+#	"9" = "westus"
+#	"10" = "centralus"
+#	"11" = "centralus"
+#	"12" = "northcentralus"
+#	"13" = "northcentralus"
+#	"14" = "southcentralus"
+#	"15" = "southcentralus"
   	"2" = "westeurope"
   	"3" = "westeurope"
-	"4" = "eastus"
-	"5" = "eastus"
-	"6" = "eastus2"
-	"7" = "eastus2"
-	"8" = "westus"
-	"9" = "westus"
-	"10" = "centralus"
-	"11" = "centralus"
-	"12" = "northcentralus"
-	"13" = "northcentralus"
-	"14" = "southcentralus"
-	"15" = "southcentralus"
+  	"4" = "westeurope"
+  	"5" = "westeurope"
+  	"6" = "westeurope"
+  	"7" = "westeurope"
   }
 }
